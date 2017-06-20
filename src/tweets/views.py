@@ -1,31 +1,39 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import DetailView, ListView, CreateView
 
 from .forms import TweetModelForm
+from .mixins import FormUserNeededMixin
 from .models import Tweet
 # Create your views here.
 
 # Create
 
-class TweetCreateView(CreateView):
+class TweetCreateView(LoginRequiredMixin, CreateView):
     form_class = TweetModelForm
     template_name = 'tweets/create_view.html'
     success_url = "/tweet/create/"
+    login_url = '/admin/'
+    # redirect_field_name = 'redirect_to'
 
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        return super(TweetCreateView, self).form_valid(form)
+    # def form_valid(self, form):
+    #     if self.request.user.is_authenticated():
+    #         form.instance.user = self.request.user
+    #         return super(TweetCreateView, self).form_valid(form)
+    #     else:
+    #         form._errors[forms.forms.NON_FIELD_ERRORS] = ErrorList(["User must be logged in to continue. "])
+    #         return self.form_invalid(form)
 
-def tweet_ceate_view(request):
-    form = TweetModelForm(request.POST or None)     # making the form happen
-    if form.is_valid():
-        instance = form.save(commit=False)
-        instance.user = request.user
-        instance.save()
-    context = {     # form rendered with this context
-        "form": form
-    }
-    return render(request, 'tweets/create_view.html', context)
+# def tweet_ceate_view(request):
+#     form = TweetModelForm(request.POST or None)     # making the form happen
+#     if form.is_valid():
+#         instance = form.save(commit=False)
+#         instance.user = request.user
+#         instance.save()
+#     context = {     # form rendered with this context
+#         "form": form
+#     }
+#     return render(request, 'tweets/create_view.html', context)
 
 
 # Update
