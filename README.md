@@ -130,6 +130,75 @@ Tweet Me has basic features of "Tweeter". This project is to learn and play arou
 5. Advanced searching
     * complex lookups with q objects
         * https://docs.djangoproject.com/en/1.11/topics/db/queries/
+6. Temperate inheritance
+    * {% extends "base.html" %} simply mean parent template. 
+    * {% block title %}Hello There{% endblock title %}
+    * {{ block.super}}
+7. Bootstrap media object for list view 
+    * Media heading
+        * http://getbootstrap.com/components/#media
+    * CSS forms
+        * http://getbootstrap.com/css/#forms
+8. Bootstrap navbar
+9. Bootstrap containers & columns 
+    * 
+    ```html
+    <div class='row'>
+        <div class ='col-sm-1' style='background-color:red;’>
+    ```
+    * 12 columns
+##### - June 21, 2017
+
+1. Tweet from Homepage
+    * Redirect view
+        * https://docs.djangoproject.com/en/1.11/ref/class-based-views/base/
+2. Django crispy forms 
+    * http://django-crispy-forms.readthedocs.io/en/latest/install.html
+        * 
+        ```
+        pip install --upgrade django-crispy-forms
+        ```
+    * add installed app in base.py, local.py, and production.py so that they work at least similarly
+    * add 
+    ```python
+    CRISPY_TEMPLATE_PACK = ‘bootstrap3’ in local.py
+    ```
+    * 
+    ```python
+    python manage.py migrate
+    ```
+3. Django Tests
+    * test.py and then
+        * 
+        ```
+        python manage.py test
+        ```
+    * joincfe.com/projects/django-test-unleashed
+4. API with Django rest framework 
+    * We want to make it more dynamic!
+    * Ajax = asynchronized javascript request
+    * for Ajax, set up APIs.
+    * In our app, we have forms with validation. view that handles from validation and act as a storage. 
+    * we will create serializer and another view for actual API.
+    * Install django rest framework - 3rd party package. specially for API. 
+    * joincfe.com/projects/django-rest-framework
+    * Our goal here: we tweet, and we get the list of tweets.
+    * install Django rest framework
+        * 
+        ```
+        pip install djangorestframework
+        ```
+    * Add ‘rest_framework’ in installed app in local.py, base.py, production.py
+5. API serializer & view 
+    * ModelSerializer
+        * http://www.django-rest-framework.org/api-guide/serializers/#modelserializer
+    * just like forms. 
+    * but it helps us to display the data we need. also can validate the data.
+    * GenericViews->ListAPIView
+        * http://www.django-rest-framework.org/api-guide/generic-views/#listapiview 
+
+
+
 
 
 
