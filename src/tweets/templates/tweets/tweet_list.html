@@ -10,15 +10,15 @@
 <script>
 
 function getParameterByName(name, url) {
-    if (!url) {
-      url = window.location.href;
-    }
-    name = name.replace(/[\[\]]/g, "\\$&");
-    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-        results = regex.exec(url);
-    if (!results) return null;
-    if (!results[2]) return '';
-    return decodeURIComponent(results[2].replace(/\+/g, " "));
+  if (!url) {
+    url = window.location.href;
+  }
+  name = name.replace(/[\[\]]/g, "\\$&");
+  var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+  results = regex.exec(url);
+  if (!results) return null;
+  if (!results[2]) return '';
+  return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
 $(document).ready(function(){
@@ -30,8 +30,8 @@ $(document).ready(function(){
     var tweetContent = tweetValue.content;
     var tweetUser = tweetValue.user;
     var tweetFormateedHtml = "<div class=\"media\"><div class=\"media-body\">" + tweetContent
-        + "<br/> via " + tweetUser.username + " | " + dateDisplay + " | "
-        + "<a href='#'>View</a>" + "</div></div><hr/>"
+    + "<br/> via " + tweetUser.username + " | " + dateDisplay + " | "
+    + "<a href='#'>View</a>" + "</div></div><hr/>"
     if (prepend == true){
       $("#tweet-container").prepend(tweetFormateedHtml)
     } else {
@@ -45,9 +45,9 @@ $(document).ready(function(){
       $("#tweet-container").text("No tweets currently found.")
     } else {
       // tweets exist, parse & display them
-     $.each(tweetList, function(key, value){
-       var tweetKey = key;
-       attachTweets(value)
+      $.each(tweetList, function(key, value){
+        var tweetKey = key;
+        attachTweets(value)
       })
     }
   }
@@ -73,10 +73,40 @@ $(document).ready(function(){
   }
   fetchTweets()
 
+  var charsStart = 140;
+  var charsCurrent = 0;
+
+  $("#tweet-form").append("<span id='tweetCharsLeft'>" + charsStart + "</span>")
+
+  $("#tweet-form textarea").keyup(function(event){
+    // console.log(event.key, event.timeStamp)
+    var tweetValue = $(this).val()
+    // console.log(tweetValue.length)
+    charsCurrent = charsStart - tweetValue.length
+    var spanChars = $("#tweetCharsLeft")
+    spanChars.text(charsCurrent)
+
+    if (charsCurrent > 0) {
+      // remove classes
+      spanChars.removeClass("grey-color")
+      spanChars.removeClass("red-color")
+    } else if (charsCurrent == 0) {
+      spanChars.removeClass("red-color")
+      spanChars.addClass("grey-color")
+
+    } else if (charsCurrent < 0) {
+      spanChars.removeClass("grey-color")
+      spanChars.addClass("red-color")
+    }
+
+  })
+
   $("#tweet-form").submit(function(event){
-      event.preventDefault()
-      var this_ = $(this)
-      var formData =  this_.serialize()
+    event.preventDefault()
+    var this_ = $(this)
+    var formData =  this_.serialize()
+    if (charsCurrent >= 0) {
+
       $.ajax({
         url: "/api/tweet/create/",
         data: formData,
@@ -88,7 +118,6 @@ $(document).ready(function(){
           // fetchTweets()
           // tweetList = data
           // parseTweets()
-
         },
         error: function(data){
           console.log("error")
@@ -96,6 +125,10 @@ $(document).ready(function(){
           console.log(data.status)
         }
       })
+    } else {
+      console.log("cannot send, tweet too long. ")
+
+    }
 
   })
 });
@@ -107,27 +140,27 @@ $(document).ready(function(){
 {% block content %}
 
 
-    <div class='row'>
-        <div class='col-sm-3 col-xs-12' style='background-color:red;'>
-        <h1>{{ request.user }}</h1>
-        </div>
-        <div class='col-sm-9 '>
-             {% if not request.GET.q %}
-                <div class=''>
+<div class='row'>
+  <div class='col-sm-3 col-xs-12' style='background-color:red;'>
+    <h1>{{ request.user }}</h1>
+  </div>
+  <div class='col-sm-9 '>
+    {% if not request.GET.q %}
+    <div class=''>
 
-                    {% include "tweets/form.html" with form=create_form action_url=create_url btn_title='Tweet' form_id='tweet-form' %}
+      {% include "tweets/form.html" with form=create_form action_url=create_url btn_title='Tweet' form_id='tweet-form' %}
 
-                </div>
-                <hr/>
-            {% endif %}
-
-          <div id='tweet-container'>
-
-
-          </div>
-
-
-        </div>
     </div>
+    <hr/>
+    {% endif %}
+
+    <div id='tweet-container'>
+
+
+    </div>
+
+
+  </div>
+</div>
 
 {% endblock content %}
