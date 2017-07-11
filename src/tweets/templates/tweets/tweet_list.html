@@ -6,7 +6,9 @@
 </style>
 
 {% block script %}
+
 <script>
+
 function getParameterByName(name, url) {
     if (!url) {
       url = window.location.href;
@@ -18,27 +20,38 @@ function getParameterByName(name, url) {
     if (!results[2]) return '';
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
+
 $(document).ready(function(){
   var query = getParameterByName('q')
   var tweetList = [];
+
+  function attachTweets(tweetValue, prepend){
+    var dateDisplay = tweetValue.date_display
+    var tweetContent = tweetValue.content;
+    var tweetUser = tweetValue.user;
+    var tweetFormateedHtml = "<div class=\"media\"><div class=\"media-body\">" + tweetContent
+        + "<br/> via " + tweetUser.username + " | " + dateDisplay + " | "
+        + "<a href='#'>View</a>" + "</div></div><hr/>"
+    if (prepend == true){
+      $("#tweet-container").prepend(tweetFormateedHtml)
+    } else {
+      $("#tweet-container").append(tweetFormateedHtml)
+    }
+
+  }
+
   function parseTweets(){
     if (tweetList == 0) {
       $("#tweet-container").text("No tweets currently found.")
     } else {
       // tweets exist, parse & display them
      $.each(tweetList, function(key, value){
-          var tweetKey = key;
-          var dateDisplay = value.date_display
-          var tweetContent = value.content;
-          var tweetUser = value.user;
-          $("#tweet-container").append(
-              "<div class=\"media\"><div class=\"media-body\">" + tweetContent
-              + "<br/> via " + tweetUser.username + " | " + dateDisplay + " | "
-              + "<a href='#'>View</a>" + "</div></div><hr/>"
-          )
+       var tweetKey = key;
+       attachTweets(value)
       })
     }
   }
+
   function fetchTweets(){
     console.log("fetching..")
     $.ajax({
@@ -69,8 +82,10 @@ $(document).ready(function(){
         data: formData,
         method: "POST",
         success: function(data){
+          this_.find("input[type=text], textarea").val("")
+          attachTweets(data, true)
           // console.log(data)
-          fetchTweets()
+          // fetchTweets()
           // tweetList = data
           // parseTweets()
 
