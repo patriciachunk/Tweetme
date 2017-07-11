@@ -7,6 +7,8 @@ from django.db import models
 
 from .validators import validate_content
 
+# model manager
+
 class Tweet(models.Model):
     # user
     user        = models.ForeignKey(settings.AUTH_USER_MODEL)
@@ -20,8 +22,8 @@ class Tweet(models.Model):
     def get_absolute_url(self):
         return reverse("tweet:detail", kwargs={"pk":self.pk})
 
-    class Meta:
-        ordering = ['-timestamp', 'content']
+    # class Meta:
+    #     ordering = ['-timestamp', 'content']
 
     # def clean(self, *args, **kwargs):
     #     content = self.content

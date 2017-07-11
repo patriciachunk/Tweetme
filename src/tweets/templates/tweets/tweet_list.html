@@ -32,7 +32,9 @@ $(document).ready(function(){
           var tweetContent = value.content;
           var tweetUser = value.user;
           $("#tweet-container").append(
-              "<div class=\"media\"><div class=\"media-body\">" + tweetContent + "<br/> via " + tweetUser.username + " | " + dateDisplay + " | " + "<a href='#'>View</a>" + "</div></div><hr/>"
+              "<div class=\"media\"><div class=\"media-body\">" + tweetContent
+              + "<br/> via " + tweetUser.username + " | " + dateDisplay + " | "
+              + "<a href='#'>View</a>" + "</div></div><hr/>"
           )
       })
     }
