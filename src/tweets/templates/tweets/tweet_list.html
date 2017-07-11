@@ -1,48 +1,43 @@
 {% extends "base.html" %}
+
 <style>
 #tweet-container {
-
 }
 </style>
 
 {% block script %}
 <script>
-
 function getParameterByName(name, url) {
-  if (!url) url = window.location.href;
-  name = name.replace(/[\[\]]/g, "\\$&");
-  var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-  results = regex.exec(url);
-  if (!results) return null;
-  if (!results[2]) return '';
-  return decodeURIComponent(results[2].replace(/\+/g, " "));
+    if (!url) {
+      url = window.location.href;
+    }
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
-
-
 $(document).ready(function(){
-  // console.log("working");
-
   var query = getParameterByName('q')
   var tweetList = [];
-
   function parseTweets(){
     if (tweetList == 0) {
-      $("#tweet-container").text("No tweets currently found. ")
-    } else{
+      $("#tweet-container").text("No tweets currently found.")
+    } else {
       // tweets exist, parse & display them
-      $.each(tweetList, function(key, value){
-        var tweetKey = key;
-        var tweetContent = value.content;
-        var tweetUser = value.user;
-        $("tweet-container").append(
-          "<div class=\"media\"><div class=\"media-body\">" + tweetContent + "<br/> via " + tweetUser.username + " | " + "<a href='#'>View</a>" + "</div></div><hr/>"
-         )
+     $.each(tweetList, function(key, value){
+          var tweetKey = key;
+          var tweetContent = value.content;
+          var tweetUser = value.user;
+          $("#tweet-container").append(
+              "<div class=\"media\"><div class=\"media-body\">" + tweetContent + "<br/> via " + tweetUser.username + " | " + "<a href='#'>View</a>" + "</div></div><hr/>"
+          )
       })
     }
   }
-
   function fetchTweets(){
-    console.log("fetching...")
+    console.log("fetching..")
     $.ajax({
       url: "/api/tweet/",
       data: {
@@ -50,7 +45,6 @@ $(document).ready(function(){
       },
       method: "GET",
       success: function(data){
-        // console.log(data)
         tweetList = data
         parseTweets()
 
@@ -61,63 +55,61 @@ $(document).ready(function(){
       }
     })
   }
-
   fetchTweets()
 
-$("#tweet-form").submit(function(event){
-  event.preventDefault()
-  var this_ = $(this)
-  var formData = this.serialize()
+  $("#tweet-form").submit(function(event){
+      event.preventDefault()
+      var this_ = $(this)
+      var formData =  this_.serialize()
+      $.ajax({
+        url: "/api/tweet/create/",
+        data: formData,
+        method: "POST",
+        success: function(data){
+          console.log(data)
+          fetchTweets()
+          // tweetList = data
+          // parseTweets()
 
-  $.ajax({
-    url: "/api/tweet/create/",
-    data: formData,
-    method: "POST",
-    success: function(data){
-      console.log(data)
-      fetchTweets()
-      // console.log(data)
-      // tweetList = data
-      // parseTweets()
+        },
+        error: function(data){
+          console.log("error")
+          console.log(data.statusText)
+          console.log(data.status)
+        }
+      })
 
-    },
-    error: function(data){
-      console.log("error")
-      console.log(data.status)
-      console.log(data.status)
-    }
   })
-  fetchTweets()
-})
-
-
 });
 </script>
 {% endblock script %}
 
 
+
 {% block content %}
 
 
+    <div class='row'>
+        <div class='col-sm-3 col-xs-12' style='background-color:red;'>
+        <h1>{{ request.user }}</h1>
+        </div>
+        <div class='col-sm-9 '>
+             {% if not request.GET.q %}
+                <div class=''>
 
-<div class='row'>
-  <div class ='col-sm-3 col-xs-12' style='background-color:red;'>
-    <h1>{{ request.user }}</h1>
-  </div>
-  <div class='col-sm-9'>
-    {% if not request.GET.q %}
-      <div class=''>
+                    {% include "tweets/form.html" with form=create_form action_url=create_url btn_title='Tweet' form_id='tweet-form' %}
 
-        {% include "tweets/form.html" with form=create_form
-        action_url=create_url btn_title='Tweet' form_id='tweet-form' %}
+                </div>
+                <hr/>
+            {% endif %}
 
-      </div>
-      <hr/>
-    {% endif %}
+          <div id='tweet-container'>
 
-    <div id='tweet-container'>
 
+          </div>
+
+
+        </div>
     </div>
-  </div>
-</div>
+
 {% endblock content %}
