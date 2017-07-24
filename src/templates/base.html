@@ -78,8 +78,11 @@ console.log(initialURL)
       success: function (data){
         console.log(data)
         // if username is in the API path, let's ignore.
-        attachTweets(data, true, true)
-        updateHashLinks()
+        if (initialURL == "/api/tweet/") {
+          attachTweets(data, true, true)
+          updateHashLinks()
+        }
+
       },
       error: function(data){
         console.log("error")
