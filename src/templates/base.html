@@ -130,25 +130,21 @@
       if (tweetValue.did_like){
         verb = 'Unlike'
       }
-      var subContent;
+      var preContent;
       var container;
       var tweetContent;
       if (tweetValue.parent) {
+        // There is a retweet.
         tweetValue = tweetValue.parent
-        subContent = "<span class='grey-color'>Retweet via "
-        + tweetValue.user.username + " on " + tweetValue.date_display + "</span><br/>"
+        subContent = "<span class='grey-color'>Retweet via " + tweetValue.user.username + " on " + tweetValue.date_display + "</span><br/>"
       }
-      tweetContent = tweetValue.content + "<br/> via <a href='" + tweetValue.content.url + "'>"
-          + tweetValue.user.username + "</a> | " + tweetValue.date_display + " | "+ "<a href='/tweet/"
-          + tweetValue.id + "'>View</a> | " + "<a class='retweetBtn' href='/tweet/"
-          + tweetValue.id + "/retweet/'>Retweet</a>" + " | <a href='#' class='tweet-like' data-id="
-          + tweetValue.id + ">" + verb + " (" + tweetValue.likes + ")</a>"
-      if (subContent) {
-        container = "<div class=\"media\"><div class=\"media-body\">" + subContent + tweetContent + "</div></div><hr/>"
 
+        tweetContent = tweetValue.content + "<br/> via <a href='" + tweetValue.user.url + "'>" + tweetValue.user.username + "</a> | " + tweetValue.date_display + " | " + "<a href='/tweet/" + tweetValue.id + "'>View</a> | " + "<a class='retweetBtn' href='/tweet/" + tweetValue.id + "/retweet/'>Retweet</a>" + " | <a href='#' class='tweet-like' data-id=" + tweetValue.id + ">" + verb + " (" + tweetValue.likes + ")</a>"
+
+      if (preContent) {
+        container = "<div class=\"media\"><div class=\"media-body\">" + preContent + tweetContent + "</div></div><hr/>"
       } else {
         container = "<div class=\"media\"><div class=\"media-body\">" + tweetContent + "</div></div><hr/>"
-
       }
       return container
     }
