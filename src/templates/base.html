@@ -133,10 +133,14 @@
       var preContent;
       var container;
       var tweetContent;
-      if (tweetValue.parent) {
+      var isReply = tweetValue.reply;
+      if (tweetValue.parent && !isReply) {
         // There is a retweet.
         tweetValue = tweetValue.parent
-        subContent = "<span class='grey-color'>Retweet via " + tweetValue.user.username + " on " + tweetValue.date_display + "</span><br/>"
+        preContent = "<span class='grey-color'>Retweet via " + tweetValue.user.username + " on " + tweetValue.date_display + "</span><br/>"
+      } else if (tweetValue.parent && isReply) {
+        preContent = "<span class='grey-color'>Reply to @ " + tweetValue.parent.user.username + "</span><br/>"
+
       }
 
         tweetContent = tweetValue.content + "<br/> via <a href='" + tweetValue.user.url + "'>" + tweetValue.user.username + "</a> | " + tweetValue.date_display + " | " + "<a href='/tweet/" + tweetValue.id + "'>View</a> | " + "<a class='retweetBtn' href='/tweet/" + tweetValue.id + "/retweet/'>Retweet</a>" + " | <a href='#' class='tweet-like' data-id=" + tweetValue.id + ">" + verb + " (" + tweetValue.likes + ")</a>"
