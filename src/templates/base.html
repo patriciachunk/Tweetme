@@ -24,7 +24,10 @@
     color: red;
   }
   .grey-color {
-    color: grey;
+    color: #ccc;
+  }
+  .media-focus {
+    background-color: rgba(255, 255, 0, 0.22);
   }
 
   </style>
@@ -94,21 +97,21 @@
 
     $(document.body).on("click", ".tweet-reply", function(e){
 
-     e.preventDefault()
-     var this_ = $(this)
-     var parentId = this_.attr("data-id")
-     var username = this_.attr("data-user")
-     var content = this_.parent().parent().find(".content").text()
+      e.preventDefault()
+      var this_ = $(this)
+      var parentId = this_.attr("data-id")
+      var username = this_.attr("data-user")
+      var content = this_.parent().parent().find(".content").text()
 
-     $("#replyModal").modal({})
-     $("#replyModal textarea").after("<input type='hidden' value='" + parentId + "' name='parent_id' />")
-     $("#replyModal textarea").after("<input type='hidden' value='" + true + "' name='reply' />")
-     $("#replyModal textarea").val("@" + username + " ")
-     $("#replyModal #replyModalLabel").text("Reply to " + content)
-     $("#replyModal").on("shown.bs.modal", function(){
-       $('textarea').focus()
-     })
-   })
+      $("#replyModal").modal({})
+      $("#replyModal textarea").after("<input type='hidden' value='" + parentId + "' name='parent_id' />")
+      $("#replyModal textarea").after("<input type='hidden' value='" + true + "' name='reply' />")
+      $("#replyModal textarea").val("@" + username + " ")
+      $("#replyModal #replyModalLabel").text("Reply to " + content)
+      $("#replyModal").on("shown.bs.modal", function(){
+        $('textarea').focus()
+      })
+    })
 
     $(document.body).on("click", ".retweetBtn", function(e){
       e.preventDefault()
@@ -151,6 +154,19 @@
       var container;
       var tweetContent;
       var isReply = tweetValue.reply;
+      var replyId = tweetValue.id
+      if (tweetValue.parent) {
+        replyId = tweetValue.parent.id
+      }
+
+      var openingContainerDiv = "<div class=\"media\">"
+      if (tweetValue.id == fetchOneId) {
+        openingContainerDiv = "<div class=\"media media-focus\">"
+        setTimeout(function(){
+          $('.media-focus').css("background-color", '#fff')
+        }, 2000)
+      }
+
       if (tweetValue.parent && !isReply) {
         // There is a retweet.
         tweetValue = tweetValue.parent
@@ -164,12 +180,12 @@
         verb = 'Unlike'
       }
 
-      tweetContent = "<span class='content'>" + tweetValue.content + "</span><br/> via <a href='" + tweetValue.user.url + "'>" + tweetValue.user.username + "</a> | " + tweetValue.date_display + " | " + "<a href='/tweet/" + tweetValue.id + "'>View</a> | " + "<a class='retweetBtn' href='/tweet/" + tweetValue.id + "/retweet/'>Retweet</a>" + " | <a href='#' class='tweet-like' data-id='" + tweetValue.id + "''>" + verb + " (" + tweetValue.likes + ")</a>" + " | <a href='#' class='tweet-reply' data-user='" + tweetValue.user.username + "' data-id='" + tweetValue.id + "''>Reply</a>"
+      tweetContent = "<span class='content'>" + tweetValue.content + "</span><br/> via <a href='" + tweetValue.user.url + "'>" + tweetValue.user.username + "</a> | " + tweetValue.date_display + " | " + "<a href='/tweet/" + tweetValue.id + "'>View</a> | " + "<a class='retweetBtn' href='/tweet/" + tweetValue.id + "/retweet/'>Retweet</a>" + " | <a href='#' class='tweet-like' data-id='" + tweetValue.id + "''>" + verb + " (" + tweetValue.likes + ")</a>" + " | <a href='#' class='tweet-reply' data-user='" + tweetValue.user.username + "' data-id='" + replyId + "''>Reply</a>"
 
       if (preContent) {
-        container = "<div class=\"media\"><div class=\"media-body\">" + preContent + tweetContent + "</div></div><hr/>"
+        container= openingContainerDiv + "<div class=\"media-body\">" + preContent + tweetContent + "</div></div><hr/>"
       } else {
-        container = "<div class=\"media\"><div class=\"media-body\">" + tweetContent + "</div></div><hr/>"
+        container = openingContainerDiv + "<div class=\"media-body\">" + tweetContent + "</div></div><hr/>"
       }
       return container
     }
@@ -237,35 +253,35 @@
     }
 
     function fetchSingle(fetchOneId){
-     var fecthDetailUrl = '/api/tweet/' + fetchOneId + '/'
-     $.ajax({
-       url: fecthDetailUrl,
-       method: "GET",
-       success: function(data){
+      var fecthDetailUrl = '/api/tweet/' + fetchOneId + '/'
+      $.ajax({
+        url: fecthDetailUrl,
+        method: "GET",
+        success: function(data){
           console.log(data)
-         tweetList = data.results
-         // if (data.next){
-         //   nextTweetUrl = data.next
-         // } else {
-         //   $("#loadmore").css("display", "none")
-         // }
-         parseTweets()
-         updateHashLinks()
+          tweetList = data.results
+          // if (data.next){
+          //   nextTweetUrl = data.next
+          // } else {
+          //   $("#loadmore").css("display", "none")
+          // }
+          parseTweets()
+          updateHashLinks()
 
-       },
-       error: function(data){
-         console.log("error")
-         console.log(data)
-       }
-     })
-   }
+        },
+        error: function(data){
+          console.log("error")
+          console.log(data)
+        }
+      })
+    }
 
 
-   if (fetchOneId){
-     fetchSingle(fetchOneId)
-   } else {
-     fetchTweets()
-   }
+    if (fetchOneId){
+      fetchSingle(fetchOneId)
+    } else {
+      fetchTweets()
+    }
 
 
     $("#loadmore").click(function(event) {
