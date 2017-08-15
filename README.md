@@ -197,15 +197,164 @@ Tweet Me has basic features of "Tweeter". This project is to learn and play arou
     * GenericViews->ListAPIView
         * http://www.django-rest-framework.org/api-guide/generic-views/#listapiview 
 
+##### - June 22, 2017
+
+1. User display serializer
+    * Now we have Tweet list API at api/tweet/ which is JSON data
+    * goal here: create a new app
+        * python manage.py startapp accounts
+    * under accounts, create __init__.py and serializers.py
+    *  Filling out serializers.py, add accounts app in setting files. (user serializers)
+    * And then add new serializers to tweet’s serializers.
+    * Then, we find updated tweet list api. (account info specified. )
+##### - July 10, 2017
+
+1. Ajax list view 
+    * Jquery is a library of Javascript
+        * http://api.jquery.com/jquery.ajax/
+    * selector
 
 
+2. jQuery search
+    * https://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript/901144#901144
+##### - July 11, 2017
+1. Ajax & create API view 
+    * CreateAPIView
+        * http://www.django-rest-framework.org/api-guide/generic-views/#createapiview
+    
+2. Date display 
+    * Now we want to change ordering. -> newest tweet on the top
+    * Model manager is another way you can do.  
+        * https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior
+
+3. Attach Tweet & Empty form
+
+4. Counting characters 
+    * selector
+    * monitor the edit. 
+    * depending on condition, we change the class. 
+    * validation
+    * max length. 
+##### - July 17, 2017
+
+1. Auto search 
+    * timeout. last thing you type, it will release. 
+
+2. Pagination & Ajax load more
+    * disadvantage now: this list. all the tweets come up. we one small set. and ;let it load. -> pagination
+    * multiple pages - pagination.
+        * http://www.django-rest-framework.org/api-guide/pagination/#modifying-the-pagination-style
+    * now you can check count variable.
+    * updated fetch tweet function to go based off of url.
+    * whatever the url in the results from the database
+    * once we grab url, we do by actual button #(‘loadmore') and 
+
+3. User detail view 
+    * build user profile. 1. user name follow button and unfollow button
+        * https://github.com/codingforentrepreneurs/Guides/blob/master/all/common_url_regex.md
+    * get_slug_field()
+        * https://docs.djangoproject.com/en/1.11/ref/class-based-views/generic-display/
+##### - July 18, 2017       
+1. Profile URL and API Update 
+    * We are going to use UserDisplayializer to include url
+    * we already did follower_count one
+
+2. User Profile & Followers 
+    * We are going to create user profile. it will include users that we are following. 
+    
+    
+##### - July 19, 2017
+1. Model Manager for Following 
+    * we have to actually update 
+2. Toggle Follow 
+    * https://docs.djangoproject.com/en/1.11/ref/class-based-views/base/#view
+ 
+3. Model Manager for Follow Toggle 
+    * Update model manager to have a few new method. one is checking if user is following other users.second one is doing the toggle with actual process. 
+    * The reason why we created toggle_follow() and is_following() is that later we can use these in any view.
+##### - July 20, 2017
+1. Signals 
+    * need signal that if user is created, check user profile is created. 
+    * post_save: signal that is sent at the end of save method. 
+        * https://docs.djangoproject.com/en/1.11/ref/signals/#post-save
 
 
+2. Signal Tests 
+    * We want to specifically test UserProfile function.
+    * python manage.py test 
 
+3. Display Following Tweets 
+4. jQuery Hashtag 
+    * We have to update our tweet list to include our own tweet. Tweets of the user is missing currently. 
 
+5. Hashtags App 
+    * we are going to create a new app for hashtag
+    * python manage.py startapp hashtags  
+    * python manage.py makemigrations   
+    * python manage.py migrate      
+##### - July 21, 2017
+1. Retweet Part 1 
+    * we are gonna do retweet. copy from original. 1 top tweet and a bunch of tweet below it that are coming from the top tweet. 
+    * after changing model, we need to make migration and migrate.
+    * create is_retweet
+##### - July 22, 2017
+1. Retweet Part 3 
+    * prevent retweet happening if this already happened.
+    * not allowing to retweet today. but after that day, you can retweet everyday.
+    * pip install pytz
 
+2. Retweet Part 4 with jQuery 
+    * http://www.django-rest-framework.org/api-guide/views/
 
+3. Parse Username & Hashtag with Python Regex 
+    * Highlighting user with @.
+    * Python regular expression. 
+##### - July 23, 2017
+1. Custom Django Signal 
+    * https://docs.djangoproject.com/en/1.11/topics/signals/#defining-signals
+##### - July 24, 2017
+1. Tweet List Loading Everywhere 
+    * update Tweet list to have our javascript located in different place.so that we can user it anywhere. 
 
+2. User Tweets API Endpoint 
+
+3. Like Tweet 
+    * like button on out tweet
+    * create the click function for it. 
+
+4. Display Likes & Verb 
+    * update serializer to show the liked account to a given model.
+
+5. jQuery Attach Tweet Refactor 
+    * create reply tweet
+    
+##### - July 25, 2017
+
+1. Display Reply Tweet & Fix Likes 
+
+bug with migration………fixed.
+    * https://stackoverflow.com/questions/36053014/no-such-column-after-adding-a-field-to-the-model
+2. A Form in a Bootstrap Modal 
+    * Modals - live demo
+      * http://getbootstrap.com/javascript/#modals
+    * from id to class => $(#blah) to $(.blah)
+3. Do the Reply 
+4. Single Detail Tweet 
+    * do fetch for individual tweet
+   
+##### - July 27, 2017
+1. Search Tweets & Users 
+    * update search. render some sort of list. 
+
+2. Hashtag Tweet List 
+
+3. Recommended Users & Custom Template Tags 
+    * https://docs.djangoproject.com/en/1.11/howto/custom-template-tags/#inclusion-tags
+
+4. Registration & Auth 
+    * https://docs.djangoproject.com/en/1.10/topics/auth/default/#all-authentication-views
+    * getbootstrap.com/css/#forms
+    * https://docs.djangoproject.com/en/1.11/ref/class-based-views/generic-editing/#formview
 
 
 [//]: # (These are reference links used in the body of this note and get stripped out when the markdown processor does its job. There is no need to format nicely because it shouldn't be seen. Thanks SO - http://stackoverflow.com/questions/4823468/store-comments-in-markdown-syntax)
